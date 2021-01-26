@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Jupyter Notebook Tips and Improvements - Hello, world! I'm Nathaniel Speiser</title>
+
+  <!-- Edit site and author settings in `_config.yml` to make the social details your own -->
+
+    <meta content="Hello, world! I'm Nathaniel Speiser" property="og:site_name">
+  
+    <meta content="Jupyter Notebook Tips and Improvements" property="og:title">
+  
+  
+    <meta content="article" property="og:type">
+  
+  
+    <meta content="You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes." property="og:description">
+  
+  
+    <meta content="/Jupyter-Notebook-tips-and-improvements/" property="og:url">
+  
+  
+    <meta content="2021-01-23T14:00:00-07:00" property="article:published_time">
+    <meta content="/about/" property="article:author">
+  
+  
+    <meta content="/assets/img/software.jpg" property="og:image">
+  
+  
+    
+  
+  
+    
+    <meta content="Productivity" property="article:tag">
+    
+    <meta content="Software" property="article:tag">
+    
+  
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@">
+    <meta name="twitter:creator" content="@">
+  
+    <meta name="twitter:title" content="Jupyter Notebook Tips and Improvements">
+  
+  
+    <meta name="twitter:url" content="/Jupyter-Notebook-tips-and-improvements/">
+  
+  
+    <meta name="twitter:description" content="You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes.">
+  
+  
+    <meta name="twitter:image:src" content="/assets/img/software.jpg">
+  
+
+	<meta name="description" content="You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes.">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta property="og:image" content="">
+	<link rel="shortcut icon" href="/assets/img/favicon/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" href="/assets/img/favicon/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-touch-icon-144x144.png">
+	<!-- Chrome, Firefox OS and Opera -->
+	<meta name="theme-color" content="#263959">
+	<!-- Windows Phone -->
+	<meta name="msapplication-navbutton-color" content="#263959">
+	<!-- iOS Safari -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="#263959">
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=PT+Serif:400,700|Lato:300,400,700&display=swap" rel="stylesheet">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="/assets/fonts/font-awesome/css/font-awesome.min.css">
+	<!-- Styles -->
+	<link rel="stylesheet" href="/assets/css/main.css">
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <aside class="sidebar">
+  <header>
+    <div class="about">
+      <div class="cover-author-image">
+        <a href="/"><img src="/assets/img/ns.jpg" alt="Nathaniel Speiser"></a>
+      </div>
+      <div class="author-name">Nathaniel Speiser</div>
+      <p>Data scientist</p>
+    </div>
+  </header> <!-- End Header -->
+  <footer>
+    <section class="contact">
+      <h3 class="contact-title">Contact me</h3>
+      <ul>
+        
+          <li class="github"><a href="http://github.com/nathaniel-speiser" target="_blank"><i class="fa fa-github"></i></a></li>
+        
+        
+          <li class="linkedin"><a href="https://in.linkedin.com/in/nathaniel-speiser-8b6864133/" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        
+        
+          <li class="email"><a href="mailto:nathaniel.speiser@gmail.com"><i class="fa fa-envelope-o"></i></a></li>
+        
+      </ul>
+    </section> <!-- End Section Contact -->
+    <div class="copyright">
+      <p>2021 &copy; Nathaniel Speiser</p>
+    </div>
+  </footer> <!-- End Footer -->
+</aside> <!-- End Sidebar -->
+<div class="content-box clearfix">
+  <article class="article-page">
+  <div class="page-content">
+    
+    <div class="page-cover-image">
+      <figure>
+        <img class="page-image" src=/assets/img/software.jpg alt="Jupyter Notebook Tips and Improvements">
+        
+      </figure>
+    </div> <!-- End Page Cover Image -->
+    
+    <div class="wrap-content">
+      <header class="header-page">
+        <h1 class="page-title">Jupyter Notebook Tips and Improvements</h1>
+        <div class="page-date"><span>2021, Jan 23&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      </header>
+      <p>Jupyter notebooks are a common but powerful tool in data science and machine learning. They allow for fast prototyping, EDA, and modeling in notebooks where code, documentation, plots, and more can be viewed all at once. That being said, it does not make its most useful features very obvious, so in this post I will go over a few ways to make the Jupyter notebook experience even better.</p>
+
+<h3 id="multiline-editing">Multiline editing</h3>
+
+<p>This is probably my favorite tip, as it can make some extremely tedious tasks much faster. While editing a cell, hold down <code class="language-plaintext highlighter-rouge">Alt</code>. The cursor should turn into a plus shape. Now clicking and dragging straight down places a cursor on each line you drag your mouse past, and dragging down+horizontally selects the same part of mutliple lines at once. As long as your code is lined up nicely, this lets you do things like change a variable name on consecutive liens quickly, comment out many lines at once, split lines, and more.</p>
+
+<h3 id="command-mode">Command mode</h3>
+
+<p>When not actively editing the contents of a cell, the notebook is in what is known as command mode. While in command mode, you can do a large amount of cell-level editing of the notebook. You can enter command mode from edit mode by simply pressing <code class="language-plaintext highlighter-rouge">Esc</code>. While not exhaustive, the following is a list of particularly useful command mode commands:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">A/B</code>: add a cell Above/Below the current cell</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">C/X/V</code>: copy/cut/paste current cell</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">D+D</code> (<code class="language-plaintext highlighter-rouge">D</code> twice): delete the current cell</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Z</code>: undo cell deletion</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">M/Y</code>: change the current cell to markdown or code</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Shift+up/down</code>: Select the current cell and the cell above/below it</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">Shift+M</code>: merge the selected cells</p>
+  </li>
+</ul>
+
+<p>You can also press <code class="language-plaintext highlighter-rouge">Cmd + Shift + P</code> to bring up the command palette, where you can do all of these actions and more.</p>
+
+<h3 id="shell-and-magic-commands">Shell and Magic commands</h3>
+
+<p>Shell commands can be run from inside a Jupyter notebook by simply placing a <code class="language-plaintext highlighter-rouge">!</code> in front of the command and executing the cell. For example, <code class="language-plaintext highlighter-rouge">!ls</code> prints the contents of the directory the notebook is in, saving  time if you need to reference a file whose name you have forgotten. You can also use <code class="language-plaintext highlighter-rouge">pip</code> and <code class="language-plaintext highlighter-rouge">conda</code> commands to  install and manage packages directly from a Jupyter notebook.</p>
+
+<p>Magic commands are statements that begin with a <code class="language-plaintext highlighter-rouge">%</code> that provide extra functionality outside of normal python execution. There are a large number of them, of varying usefulness depending on the application. The following are a few that I believe may be univeraslly useful:</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">%whos</code>: display information about all global variables. This can be useful because cells can be run non-sequentially, leading to confusion about how a variable has been assigned</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">%run file.py</code>: Runs the script <code class="language-plaintext highlighter-rouge">file.py</code> in the notebook.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">%%time and %timeit</code>: Time the execution of a cell. <code class="language-plaintext highlighter-rouge">%%time</code> times one execution of the cell while <code class="language-plaintext highlighter-rouge">%timeit</code> runs it many times and gives more statistics.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">%load_ext autoreload; %autoreload 2</code>: A specific usage of the <code class="language-plaintext highlighter-rouge">load_ext</code> magic command that makes it so if you update an external module or py file you don’t have to restart the kernel.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">%quickref</code>: Opens a reference for all magic commands - give it a look to see if any of them that I haven’t mentioned here are useful to you!</p>
+  </li>
+</ul>
+
+<h3 id="nbextensions">nbextensions</h3>
+
+<p>While the previous sections applied to Jupyter notebooks and Jupyterlab, and to a lesser degree IDEs with Jupyter notebook implementations such as PyCharm, nbextensions are extensions to the Jupyter notebook web extensions specifically. To install them, and their easy to use configurator, use</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    conda install -c conda-forge jupyter_contrib_nbextensions
+    conda install -c conda-forge jupyter_nbextensions_configurator
+</code></pre></div></div>
+
+<p>Note that to use the configurator, you may have to <a href="https://stackoverflow.com/questions/49647705/jupyter-nbextensions-does-not-appear">downgrade your jupyter notebook</a>. Many extensions still work with newer versions and can be installed via the command line however. As with the previous sections, there are many different nbextensions, and you can find the documentation for all of them <a href="https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/">here</a>. The following are my personal recommendations:</p>
+
+<ul>
+  <li>
+    <p><a href="https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/toc2/README.html">Table of contents</a>: adds a moveable table of contents, with section and subsections formed by different markdown heading levels. Also allows you to collapse any (sub)section, hiding code from view. Together these greatly help with notebook organization and navigation</p>
+  </li>
+  <li>
+    <p><a href="https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/skip-traceback/readme.html">Skip traceback</a>: hides error traceback and instead only shows the error type and short summary. Great for when you make an error while using pandas or another module with a large codebase and don’t need to see 100 of code that don’t necessarily help you fix an error.</p>
+  </li>
+  <li>
+    <p><a href="https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/scratchpad/README.html">Scratchpad</a>: Adds a single scratch cell, accessible from anywere, that doesn’t affect the rest of the notebook.</p>
+  </li>
+  <li>
+    <p><a href="https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/code_prettify/README_autopep8.html">Autopep8</a>: Adds a toolbar button that automatically reformats code to look prettier. Only affects spacing.</p>
+  </li>
+</ul>
+
+<h3 id="interactive-widgets-ipywidgets">Interactive widgets IPywidgets</h3>
+
+<p>One of the primary strengths of Jupyter notebooks is the ability to rapidly test and execute code. But if you want to execute the same code (say a function call or printing a pandas DataFrame) with slightly different arguments, you need to either make many cells with essentially the same code or rerun the cell with different arguments, which can be inconvenient. <a href="https://ipywidgets.readthedocs.io/en/stable/index.html">IPywidgets</a> allows for the creation of small widgets that execute code automatically with user adjustable arguments. To install and enable IPywidgets run</p>
+
+<p><code class="language-plaintext highlighter-rouge">conda install -c conda-forge ipywidgets</code></p>
+
+<p>To import the library in a notebook, use</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="kn">import</span> <span class="nn">ipywidgets</span> <span class="k">as</span> <span class="n">widgets</span>
+    <span class="kn">from</span> <span class="nn">ipywidgets</span> <span class="kn">import</span> <span class="n">interact</span><span class="p">,</span> <span class="n">interact_manual</span>
+</code></pre></div></div>
+
+<p>Now, to create an interactive widget, all we need to do is use the <code class="language-plaintext highlighter-rouge">@interact</code> decorator followed by a function definition.</p>
+
+<p>Essentially, the library creates controls based on the function inputs and outputs the return value of the function automatically. Giving a numerical argument creates a slider with an automatic range, while giving a tuple with the <code class="language-plaintext highlighter-rouge">(start, stop, step)</code> format creates a slider with defined bounds and steps. Giving a string argument creates a text field, while giving a list creates a drop down menu. If the code might take a while to run, you can instead use <code class="language-plaintext highlighter-rouge">@interact_manual</code> instead to only run the code when a button is pressed. These widgets can also be used in conjunction with matplotlib or seaborn to make plots with controllable x and y axes, potentially very useful for EDA.</p>
+
+<p>The widgets shared here are fairly simple and only meant as a starting point. Check out the <a href="https://ipywidgets.readthedocs.io/en/stable/index.html">documentation</a> to see the full capabilities of the library.</p>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>While the tips and adjustments mentioned here have made my Jupyter notebook experience better, they are certainly not the only ones out there. If there’s an adjustment you want to make, there’s likely an extension, magic command, or config change to make it happen. And that’s not to mention Jupyterlab, which has it’s own ecosystem of extensions, or other implementations of Jupyter. It can be intimidating to delve into customizations at first, especially if you’re learning python/data science/machine learning at the same time like I am, but hey, it’s a way to be productive while also procrastinating on your real work at the same time.</p>
+
+      <div class="page-footer">
+        <div class="page-share">
+          <a href="https://twitter.com/intent/tweet?text=Jupyter Notebook Tips and Improvements&url=/Jupyter-Notebook-tips-and-improvements/" title="Share on Twitter" rel="nofollow" target="_blank">Twitter</a>
+          <a href="https://facebook.com/sharer.php?u=/Jupyter-Notebook-tips-and-improvements/" title="Share on Facebook" rel="nofollow" target="_blank">Facebook</a>
+          <a href="https://plus.google.com/share?url=/Jupyter-Notebook-tips-and-improvements/" title="Share on Google+" rel="nofollow" target="_blank">Google+</a>
+        </div>
+        <div class="page-tag">
+          
+            <a href="/tags#Productivity" class="tag">&#35; Productivity</a>
+          
+            <a href="/tags#Software" class="tag">&#35; Software</a>
+          
+        </div>
+      </div>
+      <section class="comment-area">
+  <div class="comment-wrapper">
+    
+  </div>
+</section> <!-- End Comment Area -->
+
+    </div> <!-- End Wrap Content -->
+  </div> <!-- End Page Content -->
+</article> <!-- End Article Page -->
+
+</div>
+
+  </div>
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', '', 'auto');
+  ga('send', 'pageview');
+</script> <!-- End Analytics -->
+
+</body>
+</html>
