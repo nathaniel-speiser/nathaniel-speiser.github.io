@@ -2,9 +2,9 @@
 layout: post
 title: Jupyter Notebook Tips and Improvements
 date: 2021-01-24 00:00:00 +0300
-description: You’ll find this post in your `_posts` directory. Go ahead and edit it and re-build the site to see your changes. # Add post description (optional)
+description:  # Add post description (optional)
 img: software.jpg # Add image post (optional)
-tags: [Productivity, Software] # add tag
+tags:  # add tag
 ---
 
 Jupyter notebooks are a common but powerful tool in data science and machine learning. They allow for fast prototyping, EDA, and modeling in notebooks where code, documentation, plots, and more can be viewed all at once. That being said, it does not make its most useful features very obvious, so in this post I will go over a few ways to make the Jupyter notebook experience even better.
@@ -13,6 +13,7 @@ Jupyter notebooks are a common but powerful tool in data science and machine lea
 
 This is probably my favorite tip, as it can make some extremely tedious tasks much faster. While editing a cell, hold down `Alt`. The cursor should turn into a plus shape. Now clicking and dragging straight down places a cursor on each line you drag your mouse past, and dragging down+horizontally selects the same part of mutliple lines at once. As long as your code is lined up nicely, this lets you do things like change a variable name on consecutive liens quickly, comment out many lines at once, split lines, and more.
 
+![Multiline cursor]({{site.baseurl}}/assets/img/multiline.png)
 ### Command mode
 
 When not actively editing the contents of a cell, the notebook is in what is known as command mode. While in command mode, you can do a large amount of cell-level editing of the notebook. You can enter command mode from edit mode by simply pressing `Esc`. While not exhaustive, the following is a list of particularly useful command mode commands:
@@ -53,10 +54,10 @@ Magic commands are statements that begin with a `%` that provide extra functiona
 
 While the previous sections applied to Jupyter notebooks and Jupyterlab, and to a lesser degree IDEs with Jupyter notebook implementations such as PyCharm, nbextensions are extensions to the Jupyter notebook web extensions specifically. To install them, and their easy to use configurator, use
 
-```
-    conda install -c conda-forge jupyter_contrib_nbextensions
-    conda install -c conda-forge jupyter_nbextensions_configurator
-```
+{% highlight python %}
+conda install -c conda-forge jupyter_contrib_nbextensions
+conda install -c conda-forge jupyter_nbextensions_configurator
+{% endhighlight %}
 
 Note that to use the configurator, you may have to [downgrade your jupyter notebook](https://stackoverflow.com/questions/49647705/jupyter-nbextensions-does-not-appear). Many extensions still work with newer versions and can be installed via the command line however. As with the previous sections, there are many different nbextensions, and you can find the documentation for all of them [here](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/). The following are my personal recommendations:
 
@@ -71,21 +72,23 @@ Note that to use the configurator, you may have to [downgrade your jupyter noteb
 ### Interactive widgets IPywidgets
 
 One of the primary strengths of Jupyter notebooks is the ability to rapidly test and execute code. But if you want to execute the same code (say a function call or printing a pandas DataFrame) with slightly different arguments, you need to either make many cells with essentially the same code or rerun the cell with different arguments, which can be inconvenient. [IPywidgets](https://ipywidgets.readthedocs.io/en/stable/index.html) allows for the creation of small widgets that execute code automatically with user adjustable arguments. To install and enable IPywidgets run
+{% highlight python %}
+conda install -c conda-forge ipywidgets
+{% endhighlight %}
 
-```conda install -c conda-forge ipywidgets```
 
 To import the library in a notebook, use
-```python
-    import ipywidgets as widgets
-    from ipywidgets import interact, interact_manual
-```
 
+{% highlight python %}
+import ipywidgets as widgets
+from ipywidgets import interact, interact_manual
+{% endhighlight %}
 Now, to create an interactive widget, all we need to do is use the `@interact` decorator followed by a function definition.
-
+![A basic widget]({{site.baseurl}}/assets/img/widget1.png)
 Essentially, the library creates controls based on the function inputs and outputs the return value of the function automatically. Giving a numerical argument creates a slider with an automatic range, while giving a tuple with the `(start, stop, step)` format creates a slider with defined bounds and steps. Giving a string argument creates a text field, while giving a list creates a drop down menu. If the code might take a while to run, you can instead use `@interact_manual` instead to only run the code when a button is pressed. These widgets can also be used in conjunction with matplotlib or seaborn to make plots with controllable x and y axes, potentially very useful for EDA.
-
+![A more advanced widget]({{site.baseurl}}/assets/img/widget2.png)
 The widgets shared here are fairly simple and only meant as a starting point. Check out the [documentation](https://ipywidgets.readthedocs.io/en/stable/index.html) to see the full capabilities of the library.
 
 ### Conclusion
 
-While the tips and adjustments mentioned here have made my Jupyter notebook experience better, they are certainly not the only ones out there. If there's an adjustment you want to make, there's likely an extension, magic command, or config change to make it happen. And that's not to mention Jupyterlab, which has it's own ecosystem of extensions, or other implementations of Jupyter. It can be intimidating to delve into customizations at first, especially if you're learning python/data science/machine learning at the same time like I am, but hey, it's a way to be productive while also procrastinating on your real work at the same time.
+While the tips and adjustments mentioned here have made my Jupyter notebook experience better, they are certainly not the only ones out there. If there's an adjustment you want to make, there's likely an extension, magic command, or config change to make it happen. Let me know if theres a change that you can't live without, and happy optimizing!

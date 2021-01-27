@@ -11,7 +11,7 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 # Author Settings
 author: Nathaniel Speiser # add your name
 author-img: ns.jpg  # add your photo
-about-author: Data scientist # add description
+about-author: Data scientist, ex-physicist, yak shaver # add description
 social-github: nathaniel-speiser # add your Github handle
 social-linkedin: nathaniel-speiser-8b6864133/ # add your Linkedin handle
 social-email: nathaniel.speiser@gmail.com # add your Email address
