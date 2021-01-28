@@ -3,7 +3,7 @@ layout: post
 title: Jupyter Notebook Tips and Improvements
 date: 2021-01-24 00:00:00 +0300
 description:  # Add post description (optional)
-img: software.jpg # Add image post (optional)
+img: notebook.jpg # Add image post (optional)
 tags:  # add tag
 ---
 
@@ -11,26 +11,26 @@ Jupyter notebooks are a common but powerful tool in data science and machine lea
 
 ### Multiline editing
 
-This is probably my favorite tip, as it can make some extremely tedious tasks much faster. While editing a cell, hold down `Alt`. The cursor should turn into a plus shape. Now clicking and dragging straight down places a cursor on each line you drag your mouse past, and dragging down+horizontally selects the same part of mutliple lines at once. As long as your code is lined up nicely, this lets you do things like change a variable name on consecutive liens quickly, comment out many lines at once, split lines, and more.
+This is probably my favorite tip, as it can make some extremely tedious tasks much faster. While editing a cell, hold down `Alt`. The cursor should turn into a plus shape. Now clicking and dragging straight down places a cursor on each line you drag your mouse past, and dragging down+horizontally selects the same part of mutliple lines at once. As long as your code is lined up nicely, this lets you do things like change a variable name on consecutive lines quickly, comment out many lines at once, split lines, and more.
 
 ![Multiline cursor]({{site.baseurl}}/assets/img/multiline.png)
 ### Command mode
 
 When not actively editing the contents of a cell, the notebook is in what is known as command mode. While in command mode, you can do a large amount of cell-level editing of the notebook. You can enter command mode from edit mode by simply pressing `Esc`. While not exhaustive, the following is a list of particularly useful command mode commands:
 
-* `A/B`: add a cell Above/Below the current cell
+* `A/B`: add a cell Above/Below the current cell.
 
-* ```C/X/V```: copy/cut/paste current cell
+* ```C/X/V```: copy/cut/paste current cell.
 
-* `D+D` (`D` twice): delete the current cell
+* `D+D` (`D` twice): delete the current cell.
 
-* `Z`: undo cell deletion
+* `Z`: undo cell deletion.
 
-* `M/Y`: change the current cell to markdown or code
+* `M/Y`: change the current cell to markdown or code.
 
-* `Shift+up/down`: Select the current cell and the cell above/below it
+* `Shift+up/down`: Select the current cell and the cell above/below it.
 
-* `Shift+M`: merge the selected cells
+* `Shift+M`: merge the selected cells.
 
 You can also press `Cmd + Shift + P` to bring up the command palette, where you can do all of these actions and more.
 
@@ -40,13 +40,13 @@ Shell commands can be run from inside a Jupyter notebook by simply placing a `!`
 
 Magic commands are statements that begin with a `%` that provide extra functionality outside of normal python execution. There are a large number of them, of varying usefulness depending on the application. The following are a few that I believe may be univeraslly useful:
 
-* `%whos`: display information about all global variables. This can be useful because cells can be run non-sequentially, leading to confusion about how a variable has been assigned
+* `%whos`: display information about all global variables. This can be useful because cells can be run non-sequentially, leading to confusion about how a variable has been assigned.
 
 * `%run file.py`: Runs the script `file.py` in the notebook.
 
 * `%%time and %timeit`: Time the execution of a cell. `%%time` times one execution of the cell while `%timeit` runs it many times and gives more statistics.
 
-* `%load_ext autoreload; %autoreload 2`: A specific usage of the `load_ext` magic command that makes it so if you update an external module or py file you don't have to restart the kernel.
+* `%load_ext autoreload + %autoreload 2`: A specific usage of the `load_ext` magic command that makes it so if you update an external module or py file you don't have to restart the kernel.
 
 * `%quickref`: Opens a reference for all magic commands - give it a look to see if any of them that I haven't mentioned here are useful to you!
 
@@ -61,7 +61,7 @@ conda install -c conda-forge jupyter_nbextensions_configurator
 
 Note that to use the configurator, you may have to [downgrade your jupyter notebook](https://stackoverflow.com/questions/49647705/jupyter-nbextensions-does-not-appear). Many extensions still work with newer versions and can be installed via the command line however. As with the previous sections, there are many different nbextensions, and you can find the documentation for all of them [here](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/). The following are my personal recommendations:
 
-* [Table of contents](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/toc2/README.html): adds a moveable table of contents, with section and subsections formed by different markdown heading levels. Also allows you to collapse any (sub)section, hiding code from view. Together these greatly help with notebook organization and navigation
+* [Table of contents](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/toc2/README.html): adds a moveable table of contents, with section and subsections formed by different markdown heading levels. Also allows you to collapse any (sub)section, hiding code from view. Together these greatly help with notebook organization and navigation.
 
 * [Skip traceback](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/skip-traceback/readme.html): hides error traceback and instead only shows the error type and short summary. Great for when you make an error while using pandas or another module with a large codebase and don't need to see 100 of code that don't necessarily help you fix an error.
 
