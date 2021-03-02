@@ -3,7 +3,7 @@ layout: post
 title: Analyzing the Wheel of time with NLP
 date: 2021-03-03 00:00:00 +0300
 description:  # Add post description (optional)
-img: dragon.svg # Add image post (optional)
+img: dragon.png # Add image post (optional)
 tags:  # add tag
 ---
 
