@@ -52,14 +52,14 @@ Magic commands are statements that begin with a `%` that provide extra functiona
 
 ### nbextensions
 
-While the previous sections applied to Jupyter notebooks and Jupyterlab, and to a lesser degree IDEs with Jupyter notebook implementations such as PyCharm, nbextensions are extensions to the Jupyter notebook web extensions specifically. To install them, and their easy to use configurator, use
+While the previous sections applied to Jupyter notebooks and Jupyterlab, and to a lesser degree IDEs with Jupyter notebook implementations such as PyCharm, nbextensions are extensions to the Jupyter notebook web interface specifically. To install them, and their easy to use configurator, use
 
 {% highlight python %}
 conda install -c conda-forge jupyter_contrib_nbextensions
 conda install -c conda-forge jupyter_nbextensions_configurator
 {% endhighlight %}
 
-Note that to use the configurator, you may have to [downgrade your jupyter notebook](https://stackoverflow.com/questions/49647705/jupyter-nbextensions-does-not-appear). Many extensions still work with newer versions and can be installed via the command line however. As with the previous sections, there are many different nbextensions, and you can find the documentation for all of them [here](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/). The following are my personal recommendations:
+Note that to use the configurator you may have to [downgrade your jupyter notebook](https://stackoverflow.com/questions/49647705/jupyter-nbextensions-does-not-appear). Many extensions still work with newer versions and can be installed via the command line however. As with the previous sections, there are many different nbextensions, and you can find the documentation for all of them [here](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/). The following are my personal recommendations:
 
 * [Table of contents](https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/toc2/README.html): adds a moveable table of contents, with section and subsections formed by different markdown heading levels. Also allows you to collapse any (sub)section, hiding code from view. Together these greatly help with notebook organization and navigation.
 
