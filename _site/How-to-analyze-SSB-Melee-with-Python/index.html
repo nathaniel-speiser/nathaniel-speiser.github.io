@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>How to analyze SSB Melee with Python - Nathaniel Speiser's blog</title>
+
+  <!-- Edit site and author settings in `_config.yml` to make the social details your own -->
+
+    <meta content="Nathaniel Speiser's blog" property="og:site_name">
+  
+    <meta content="How to analyze SSB Melee with Python" property="og:title">
+  
+  
+    <meta content="article" property="og:type">
+  
+  
+    <meta content="Nathaniel Speiser's data science blog
+" property="og:description">
+  
+  
+    <meta content="/How-to-analyze-SSB-Melee-with-Python/" property="og:url">
+  
+  
+    <meta content="2021-04-11T15:00:00-06:00" property="article:published_time">
+    <meta content="/about/" property="article:author">
+  
+  
+    <meta content="/assets/img/melee_banner.jpeg" property="og:image">
+  
+  
+    
+  
+  
+    
+  
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@">
+    <meta name="twitter:creator" content="@">
+  
+    <meta name="twitter:title" content="How to analyze SSB Melee with Python">
+  
+  
+    <meta name="twitter:url" content="/How-to-analyze-SSB-Melee-with-Python/">
+  
+  
+    <meta name="twitter:description" content="Nathaniel Speiser's data science blog
+">
+  
+  
+    <meta name="twitter:image:src" content="/assets/img/melee_banner.jpeg">
+  
+
+	<meta name="description" content="">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta property="og:image" content="">
+	<link rel="shortcut icon" href="/assets/img/favicon/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" href="/assets/img/favicon/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-touch-icon-144x144.png">
+	<!-- Chrome, Firefox OS and Opera -->
+	<meta name="theme-color" content="#263959">
+	<!-- Windows Phone -->
+	<meta name="msapplication-navbutton-color" content="#263959">
+	<!-- iOS Safari -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="#263959">
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=PT+Serif:400,700|Lato:300,400,700&display=swap" rel="stylesheet">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="/assets/fonts/font-awesome/css/font-awesome.min.css">
+	<!-- Styles -->
+	<link rel="stylesheet" href="/assets/css/main.css">
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <aside class="sidebar">
+  <header>
+    <div class="about">
+      <div class="cover-author-image">
+        <a href="/"><img src="/assets/img/ns.jpg" alt="Nathaniel Speiser"></a>
+      </div>
+      <div class="author-name">Nathaniel Speiser</div>
+      <p>Data scientist, ex-physicist, yak shaver</p>
+    </div>
+  </header> <!-- End Header -->
+  <footer>
+    <section class="contact">
+      <h3 class="contact-title">Contact me</h3>
+      <ul>
+        
+          <li class="github"><a href="http://github.com/nathaniel-speiser" target="_blank"><i class="fa fa-github"></i></a></li>
+        
+        
+          <li class="linkedin"><a href="https://in.linkedin.com/in/nathaniel-speiser" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        
+        
+          <li class="email"><a href="mailto:nathaniel.speiser@gmail.com"><i class="fa fa-envelope-o"></i></a></li>
+        
+      </ul>
+    </section> <!-- End Section Contact -->
+    <div class="copyright">
+      <p>2021 &copy; Nathaniel Speiser</p>
+    </div>
+  </footer> <!-- End Footer -->
+</aside> <!-- End Sidebar -->
+<div class="content-box clearfix">
+  <article class="article-page">
+  <div class="page-content">
+    
+    <div class="page-cover-image">
+      <figure>
+        <img class="page-image" src=/assets/img/melee_banner.jpeg alt="How to analyze SSB Melee with Python">
+        
+      </figure>
+    </div> <!-- End Page Cover Image -->
+    
+    <div class="wrap-content">
+      <header class="header-page">
+        <h1 class="page-title">How to analyze SSB Melee with Python</h1>
+        <div class="page-date"><span>2021, Apr 11&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      </header>
+      <p><em>Super Smash Bros. Melee</em> (Melee from here on) is a Nintendo party game for the Gamecube where you and your friends try to knock each other off the stage as a variety of Nintendo and third party characters. You might remember it from an early 2000s play date where your best friend would relentlessly transform into a block and drop on top of you as Kirby. Or maybe you remember it as that game the nerds down the hall in your dorm would play late into the night as you tried to sleep on a Wednesday (for the record, I was one of the nerds, not one of the people trying to sleep). Regardless, despite being nearly 20 years old, it has a thriving competitive scene that can draw tens of thousands of viewers. I started following the competitive Melee scene 5-6 years ago, and since then it has only continued to grow. When I started doing projects to transition into data science, I knew I wanted to do something with all the data and tools the community has put together. My next few blog posts will cover my exploration of competitive Melee with data science tools. For this post I’ll just focus on how you can get games into a format where you can do further analysis.</p>
+
+<h3 id="getting-melee-games-into-python">Getting Melee games into Python</h3>
+
+<p>You might ask yourself how we could possibly explore a Gamecube game with modern tools. As with most things related to Melee, the answer lies with its fans. Over the years, a number of developers have dome some magical things with Melee. The one that is most important here is <a href="https://slippi.appspot.com/">Project Slippi</a>. Slippi allows for the recording of games into .slp replay files, which can then be viewed with an emulator. As a sidenote, Slippi also allows for online matchmaking with rollback netcode (which to me is basically magic) on a game that came out for a console that could not connect to the internet. It’s absolutely incredible. Even better, there are libraries that let you parse through the Slippi replay files in several languages, some written by the Slippi developers, some written by community members. I’ll be using the <a href="https://py-slippi.readthedocs.io/en/latest/">py-slippi</a> library to parse through games with Python.</p>
+
+<h3 id="using-py-slippi-to-read-in-games">Using py-slippi to read in games</h3>
+
+<p>py-slippi supports both reading in a saved .slp file as well and reading in a stream (a file being written while it’s being played). I’ll focus on the former as it is more straightforward as well as what I did for my project. In order to read in a game, just treat it as you would any other file and pass it into a py-slippi Game object. This Game is the primary object we’ll be using, and it contains all the data in the game saved to the .slp file. If we just print out this object, we can see its general structure:
+<img src="/assets/img/melee/post1/structure.png" alt="The structure of a Game object" /></p>
+
+<p>Essentially, the Game we put our replay file into stores all the game data into a bunch of enum-like objects. In order to access the stage, for example, we’d simply use <code class="language-plaintext highlighter-rouge">game.start.stage</code>. If we just want the name of the stage, use <code class="language-plaintext highlighter-rouge">game.start.stage.name</code>. You can see all the general metadata of the game that py-slippi provides in the picture above, and they are all accessed in a similar way. One thing to note that occurs throught the Game object is that even if there are only two players, the Game object has info for all four ports (note the two Nones in the players field under start). I found it is best to keep track of which ports are occupied as these will stay consistent throughout the game.</p>
+
+<h3 id="accessing-frame-by-frame-data">Accessing frame-by-frame data</h3>
+
+<p>Now that we’ve seen how the game metadata is stored, we can start looking at the frame by frame data. A frame occurs every 1/60th of a second in Melee and is essentially the smallest unit of time where the gamestate is evaluated and updated. All the frames that make up a game are stored sequentially in the <code class="language-plaintext highlighter-rouge">frames</code> attribute of a Game object, whose output is suppressed in the picture above. We simply access <code class="language-plaintext highlighter-rouge">frames</code> like a list. For example if we look at the first frame of our example game we get:
+<img src="/assets/img/melee/post1/frame.png" alt="The structure of a frame" /></p>
+
+<p>As you can see there’s quite a bit of data here. I don’t want to go through everything but I do want to talk about the general structure because it can be a bit unclear when you are just getting started. The important thing to know is that the data you most likely care about is in <code class="language-plaintext highlighter-rouge">ports</code>. <code class="language-plaintext highlighter-rouge">ports</code> will always have 4 entries, but only the ports filled by players will be filled. For the non-None entries, each port has two fields: leader and follower. This is only relevant for the Ice Climbers, a character that actually consists of a main character and a follower character, controlled by the computer if being played by a human. For all other characters only the leader field will be filled with data. The leader field has two subfields: pre and post. These refer to the information of that character at the beginning and end of the frame in question. The pre field mostly consists of information about controller inputs, while the post field contains more in-game information, such as the action-state of the character in question and their stock (life) count. post is what I used most in my game analysis, because I think it contains the most interesting information about what is actually happening in the game.</p>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>I hope that this is useful for anyone who wants to get started analyzing Melee games with Python. In the my next few blog posts I’ll go more in depth with what I did for my final project for Metis, where I calculated in game win probabilities. If you’d like to jump ahead and see what I did, you can find that project <a href="https://github.com/nathaniel-speiser/melee-predicter">here</a>.</p>
+
+      <div class="page-footer">
+        <div class="page-share">
+          <a href="https://twitter.com/intent/tweet?text=How to analyze SSB Melee with Python&url=/How-to-analyze-SSB-Melee-with-Python/" title="Share on Twitter" rel="nofollow" target="_blank">Twitter</a>
+          <a href="https://facebook.com/sharer.php?u=/How-to-analyze-SSB-Melee-with-Python/" title="Share on Facebook" rel="nofollow" target="_blank">Facebook</a>
+          <a href="https://plus.google.com/share?url=/How-to-analyze-SSB-Melee-with-Python/" title="Share on Google+" rel="nofollow" target="_blank">Google+</a>
+        </div>
+        <div class="page-tag">
+          
+        </div>
+      </div>
+      <section class="comment-area">
+  <div class="comment-wrapper">
+    
+  </div>
+</section> <!-- End Comment Area -->
+
+    </div> <!-- End Wrap Content -->
+  </div> <!-- End Page Content -->
+</article> <!-- End Article Page -->
+
+</div>
+
+  </div>
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', '', 'auto');
+  ga('send', 'pageview');
+</script> <!-- End Analytics -->
+
+</body>
+</html>

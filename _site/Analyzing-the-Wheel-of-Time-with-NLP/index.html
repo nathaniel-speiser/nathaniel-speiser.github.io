@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Analyzing the Wheel of time with NLP - Nathaniel Speiser's blog</title>
+
+  <!-- Edit site and author settings in `_config.yml` to make the social details your own -->
+
+    <meta content="Nathaniel Speiser's blog" property="og:site_name">
+  
+    <meta content="Analyzing the Wheel of time with NLP" property="og:title">
+  
+  
+    <meta content="article" property="og:type">
+  
+  
+    <meta content="Nathaniel Speiser's data science blog
+" property="og:description">
+  
+  
+    <meta content="/Analyzing-the-Wheel-of-Time-with-NLP/" property="og:url">
+  
+  
+    <meta content="2021-03-02T14:00:00-07:00" property="article:published_time">
+    <meta content="/about/" property="article:author">
+  
+  
+    <meta content="/assets/img/dragon.png" property="og:image">
+  
+  
+    
+  
+  
+    
+  
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@">
+    <meta name="twitter:creator" content="@">
+  
+    <meta name="twitter:title" content="Analyzing the Wheel of time with NLP">
+  
+  
+    <meta name="twitter:url" content="/Analyzing-the-Wheel-of-Time-with-NLP/">
+  
+  
+    <meta name="twitter:description" content="Nathaniel Speiser's data science blog
+">
+  
+  
+    <meta name="twitter:image:src" content="/assets/img/dragon.png">
+  
+
+	<meta name="description" content="">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta property="og:image" content="">
+	<link rel="shortcut icon" href="/assets/img/favicon/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" href="/assets/img/favicon/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicon/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicon/apple-touch-icon-144x144.png">
+	<!-- Chrome, Firefox OS and Opera -->
+	<meta name="theme-color" content="#263959">
+	<!-- Windows Phone -->
+	<meta name="msapplication-navbutton-color" content="#263959">
+	<!-- iOS Safari -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="#263959">
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css?family=PT+Serif:400,700|Lato:300,400,700&display=swap" rel="stylesheet">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="/assets/fonts/font-awesome/css/font-awesome.min.css">
+	<!-- Styles -->
+	<link rel="stylesheet" href="/assets/css/main.css">
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <aside class="sidebar">
+  <header>
+    <div class="about">
+      <div class="cover-author-image">
+        <a href="/"><img src="/assets/img/ns.jpg" alt="Nathaniel Speiser"></a>
+      </div>
+      <div class="author-name">Nathaniel Speiser</div>
+      <p>Data scientist, ex-physicist, yak shaver</p>
+    </div>
+  </header> <!-- End Header -->
+  <footer>
+    <section class="contact">
+      <h3 class="contact-title">Contact me</h3>
+      <ul>
+        
+          <li class="github"><a href="http://github.com/nathaniel-speiser" target="_blank"><i class="fa fa-github"></i></a></li>
+        
+        
+          <li class="linkedin"><a href="https://in.linkedin.com/in/nathaniel-speiser" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+        
+        
+          <li class="email"><a href="mailto:nathaniel.speiser@gmail.com"><i class="fa fa-envelope-o"></i></a></li>
+        
+      </ul>
+    </section> <!-- End Section Contact -->
+    <div class="copyright">
+      <p>2021 &copy; Nathaniel Speiser</p>
+    </div>
+  </footer> <!-- End Footer -->
+</aside> <!-- End Sidebar -->
+<div class="content-box clearfix">
+  <article class="article-page">
+  <div class="page-content">
+    
+    <div class="page-cover-image">
+      <figure>
+        <img class="page-image" src=/assets/img/dragon.png alt="Analyzing the Wheel of time with NLP">
+        
+      </figure>
+    </div> <!-- End Page Cover Image -->
+    
+    <div class="wrap-content">
+      <header class="header-page">
+        <h1 class="page-title">Analyzing the Wheel of time with NLP</h1>
+        <div class="page-date"><span>2021, Mar 02&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      </header>
+      <p><em>The Wheel of Time</em> is perhaps the pinnacle of chosen one saves the world fantasy stories. Spanning 14 main books and 1 prequel, 4.4 million words, 704 chapters, and nearly 2800 named characters, it is truly an epic in every sense of the word. Tragically its original author, Robert Jordan, passed away before he could finish the series, but fantasy author Brandon Sanderson (likely the most famous current fantasy author) stepped in at behest of Jordan’s editor and wife, Harriet McDougal, to finish it. Due to its length and the richness of its text with unconventional writing, I thought it would be interesting to investigate with natural language processing (NLP) techniques as part of my fourth project at Metis.</p>
+
+<h3 id="importing-and-processing-the-text">Importing and processing the text</h3>
+
+<p>Before I could do anything else, I needed to load the text of the books into Python. I should note that I only used the 14 main series books and not the prequel, partly because the former are more connected, and partly because I had never read the prequel. I looked into a variety of ways of importing the books, and I settled on converting the books to text files using an online tool (not python) and simply reading them in with simple python read statements. I did this because it was much easier than parsing the data from an epub/pdf in python, though I believe some text was slightly messed up in the process. After importing the text, I did some basic cleaning, including removing punctuation, excess white space, etc. I also removed stopwords at this point. Finally, I also singularized all the words using TextBlob’s singularize function. I did so to turn posessives, which looked like plurals after the punctuation removal, into the names of the characters (i.e. Rand’s -&gt; Rands -&gt; Rand). With the text cleaned, I could start investigating the text more.</p>
+
+<h3 id="writing-differences-between-jordan-and-sanderson">Writing differences between Jordan and Sanderson</h3>
+
+<p>One of the first things that I wanted to investigate were any writing differences between Robert Jordan and Brandon Sanderson. I separated the books into the first 11 (which Jordan wrote exclusively) and the last 3 (written mostly by Sanderson). Then, using NLTK’s part of speech tagger, I looked at the verbs, adverbs, and adjectives that one author used that the other did not. I chose these parts of speech because I believed that these would be the largest differentiators of writing style. I turned the most frequent of these for each author into a wordcloud, which you can see below. What I found largely matched with my expectations: Jordan is known for more flowery and descriptive language, reflected in the large number of prominent adverbs. Sanderson on the other hand uses more straight forward and action-oriented language, which can be seen from words like “destructive” and “barreling”.
+<img src="/assets/img/wot/word_differences.png" alt="Jordan and Sanderson writing differences" /></p>
+
+<h3 id="topic-modeling">Topic Modeling</h3>
+
+<p>Writing difference analysis finished, I turned to topic modeling. After trying a variety of methods, I found that sklearn’s <code class="language-plaintext highlighter-rouge">TfidfVectorizer</code> and <code class="language-plaintext highlighter-rouge">NMF</code> worked best. I included both unigrams and bigrams in the vectorizer as there are many important terms in <em>The Wheel of Time</em> that consist of two words, such as “Aes Sedai” and “Lews Therin”, that I wanted to be sure to include in my topics. This didn’t drastically improve performance, but it did help slightly with interpretability.</p>
+
+<p>The combination of these two techniques, in my opinion, worked astoundingly well. After playing around with the number of topics, I settled on twenty. Even with this large number of topics, the topics I found were each distinct. The topics I found generally fell into three categories. First, there were major characters such as Rand, Mat, and Perrin. Next there were recurring groups, such as the Aiel and Aes Sedai. Finally there were specific storylines, such as Emond’s field (the town where the main characters start), and the Last Battle. After finding the topics, I plotted their presence across all the chapters in the series, which you can see below.
+<img src="/assets/img/wot/topicsovertime.png" alt="Topics over time" /></p>
+
+<p>The NMF model does seem to accurately capture the presence of the topics with a high degree of accuracy. For example, it captures the first appearance of Elayne and Gawyn in the first book, and Perrin’s absence in the fifth book, <em>Fire of Heaven</em>. Interestingly, the three plotlines that the model made topics (Emond’s Field, Horn of Valere, and The Last Battle) are plotlines where many of the main characters are together in one place (something that is not true for many of the middle books), so perhaps the presence of these topics could be an indirect measure of character density. Overall, given the distinctness of the topics and the way that they correctly seem to evolve over the course of the story I am quite happy with how the topic modeling turned out.</p>
+
+<h3 id="correlation-of-topics-with-ratings">Correlation of topics with ratings</h3>
+
+<p>Next, I wanted to investigate how the presence of certain topics correlate with the ratings of the books. Within the community, the least enjoyed books (books 8, 9, and 10) are collectively known as “The Slog” and are infamous for disliked plotlines such as the kidnapping of one of the main character’s love interest, Faile, and for the main plot not advaning a great deal. I wanted to see if we could see this if I could find the topics that people seem to enjoy the most and the least. Such an analysis could be useful for the writers of the upcoming show to have when deciding who/what to cut. The results of my analysis, which consisted of finding the pearson correlation coefficient between the presence of all topics in a chapter and the overall rating for the book that contains that chapter, is shown below.
+<img src="/assets/img/wot/ratings.png" alt="Topics correlation with book ratings" /></p>
+
+<p>The results here are somewhat of a mixed bag. It certainly makes sense that the Last Battle has the highest positive correlation with book rating (this topic is localized in the last few books and those are extremely well regarded by fans) and the aforementioned Faile plot is at near the bottom. However, it doesn’t seem to make sense that Gawyn, who is a widely hated character, should be so close to the top. I think the issue here is that I only used book ratings, rather than chapter by chapter ratings (which I could not find), and that I did a simple correlation coefficient as opposed to a regression. The Gawyn chapters happen later in the series, so my guess would be that they would be regarded as the worst chapters in the best books, hence the high positive correlation with ratings.</p>
+
+<h3 id="making-character-networks">Making character networks</h3>
+
+<p>Somewhat as an aside from topic modeling, because there are so many characters I wanted to visualize character interactions throughout the books as a network (or more accurately, as an undirected graph). I went through the cleaned text and found all the instances where two characters’ names appeared within a certain number of words of each other. I found these connections individually for each chapter as well as cumulatively in the story at that chapter. I put all of these into a <code class="language-plaintext highlighter-rouge">networkx</code> network objects and plotted them using plotly, an example of which you can see below. I only used a subset of characters as otherwise the graph was simply too croweded. As a sidenote, the process of deciding where nodes of a graph is surprisingly deep, with the algorithm I decided to use treating nodes as experiencing a repulsive pseudogravity and the edges acting as attractive springs with strength determined by edge weight (i.e. the number of times two characters interacted). It’s interesting to see the patterns that emerge, even if they are to be expected. The main characters are in the center and are strongly connected to each other, while side characters that belong to distinct groups, such as the Forsaken (Moridin, Graendal, Sammael, Demandred, and Moghedien) or characters associated with the Black Tower (Androl, Pevara, Taim, and Logain) form subnetworks off to the side of the main cast.
+<img src="/assets/img/wot/network.png" alt="Topics correlation with book ratings" /></p>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>I enjoyed doing this project a lot. <em>The Wheel of Time</em> is one of my favorite series of all time, so getting to use it as a dataset in a project was a lot of fun. It was interesting to see what insights I could gleam using NLP techniques and how those matched up to my expectations. If you want to see more detail into how I did things, you can check out the repo for this project <a href="https://github.com/nathaniel-speiser/WOT-NLP">here</a>. I also made a streamlit app where you can explore the topics I found and the character networks, which you can run by downloading the repo. When I recieve my invitation to host that app on streamlit, I’ll update this post with the link to that so it’s more accessible if you’re curious!</p>
+
+      <div class="page-footer">
+        <div class="page-share">
+          <a href="https://twitter.com/intent/tweet?text=Analyzing the Wheel of time with NLP&url=/Analyzing-the-Wheel-of-Time-with-NLP/" title="Share on Twitter" rel="nofollow" target="_blank">Twitter</a>
+          <a href="https://facebook.com/sharer.php?u=/Analyzing-the-Wheel-of-Time-with-NLP/" title="Share on Facebook" rel="nofollow" target="_blank">Facebook</a>
+          <a href="https://plus.google.com/share?url=/Analyzing-the-Wheel-of-Time-with-NLP/" title="Share on Google+" rel="nofollow" target="_blank">Google+</a>
+        </div>
+        <div class="page-tag">
+          
+        </div>
+      </div>
+      <section class="comment-area">
+  <div class="comment-wrapper">
+    
+  </div>
+</section> <!-- End Comment Area -->
+
+    </div> <!-- End Wrap Content -->
+  </div> <!-- End Page Content -->
+</article> <!-- End Article Page -->
+
+</div>
+
+  </div>
+  
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', '', 'auto');
+  ga('send', 'pageview');
+</script> <!-- End Analytics -->
+
+</body>
+</html>

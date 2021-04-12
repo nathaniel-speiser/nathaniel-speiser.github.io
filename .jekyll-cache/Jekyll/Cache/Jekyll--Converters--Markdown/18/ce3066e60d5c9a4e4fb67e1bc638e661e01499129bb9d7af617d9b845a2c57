@@ -1,8 +1,8 @@
-I"M+<p>Jupyter notebooks are a common but powerful tool in data science and machine learning. They allow for fast prototyping, EDA, and modeling in notebooks where code, documentation, plots, and more can be viewed all at once. That being said, it does not make its most useful features very obvious, so in this post I will go over a few ways to make the Jupyter notebook experience even better.</p>
+I"[+<p>Jupyter notebooks are a common but powerful tool in data science and machine learning. They allow for fast prototyping, EDA, and modeling in notebooks where code, documentation, plots, and more can be viewed all at once. That being said, it does not make its most useful features very obvious, so in this post I will go over a few ways to make the Jupyter notebook experience even better.</p>
 
 <h3 id="multiline-editing">Multiline editing</h3>
 
-<p>This is probably my favorite tip, as it can make some extremely tedious tasks much faster. While editing a cell, hold down <code class="language-plaintext highlighter-rouge">Alt</code>. The cursor should turn into a plus shape. Now clicking and dragging straight down places a cursor on each line you drag your mouse past, and dragging down+horizontally selects the same part of mutliple lines at once. As long as your code is lined up nicely, this lets you do things like change a variable name on consecutive liens quickly, comment out many lines at once, split lines, and more.</p>
+<p>This is probably my favorite tip, as it can make some extremely tedious tasks much faster. While editing a cell, hold down <code class="language-plaintext highlighter-rouge">Alt</code>. The cursor should turn into a plus shape. Now clicking and dragging straight down places a cursor on each line you drag your mouse past, and dragging down+horizontally selects the same part of mutliple lines at once. As long as your code is lined up nicely, this lets you do things like change a variable name on consecutive lines quickly, comment out many lines at once, split lines, and more.</p>
 
 <p><img src="/assets/img/multiline.png" alt="Multiline cursor" /></p>
 <h3 id="command-mode">Command mode</h3>
@@ -11,25 +11,25 @@
 
 <ul>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">A/B</code>: add a cell Above/Below the current cell</p>
+    <p><code class="language-plaintext highlighter-rouge">A/B</code>: add a cell Above/Below the current cell.</p>
   </li>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">C/X/V</code>: copy/cut/paste current cell</p>
+    <p><code class="language-plaintext highlighter-rouge">C/X/V</code>: copy/cut/paste current cell.</p>
   </li>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">D+D</code> (<code class="language-plaintext highlighter-rouge">D</code> twice): delete the current cell</p>
+    <p><code class="language-plaintext highlighter-rouge">D+D</code> (<code class="language-plaintext highlighter-rouge">D</code> twice): delete the current cell.</p>
   </li>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">Z</code>: undo cell deletion</p>
+    <p><code class="language-plaintext highlighter-rouge">Z</code>: undo cell deletion.</p>
   </li>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">M/Y</code>: change the current cell to markdown or code</p>
+    <p><code class="language-plaintext highlighter-rouge">M/Y</code>: change the current cell to markdown or code.</p>
   </li>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">Shift+up/down</code>: Select the current cell and the cell above/below it</p>
+    <p><code class="language-plaintext highlighter-rouge">Shift+up/down</code>: Select the current cell and the cell above/below it.</p>
   </li>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">Shift+M</code>: merge the selected cells</p>
+    <p><code class="language-plaintext highlighter-rouge">Shift+M</code>: merge the selected cells.</p>
   </li>
 </ul>
 
@@ -43,7 +43,7 @@
 
 <ul>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">%whos</code>: display information about all global variables. This can be useful because cells can be run non-sequentially, leading to confusion about how a variable has been assigned</p>
+    <p><code class="language-plaintext highlighter-rouge">%whos</code>: display information about all global variables. This can be useful because cells can be run non-sequentially, leading to confusion about how a variable has been assigned.</p>
   </li>
   <li>
     <p><code class="language-plaintext highlighter-rouge">%run file.py</code>: Runs the script <code class="language-plaintext highlighter-rouge">file.py</code> in the notebook.</p>
@@ -52,7 +52,7 @@
     <p><code class="language-plaintext highlighter-rouge">%%time and %timeit</code>: Time the execution of a cell. <code class="language-plaintext highlighter-rouge">%%time</code> times one execution of the cell while <code class="language-plaintext highlighter-rouge">%timeit</code> runs it many times and gives more statistics.</p>
   </li>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">%load_ext autoreload; %autoreload 2</code>: A specific usage of the <code class="language-plaintext highlighter-rouge">load_ext</code> magic command that makes it so if you update an external module or py file you don’t have to restart the kernel.</p>
+    <p><code class="language-plaintext highlighter-rouge">%load_ext autoreload + %autoreload 2</code>: A specific usage of the <code class="language-plaintext highlighter-rouge">load_ext</code> magic command that makes it so if you update an external module or py file you don’t have to restart the kernel.</p>
   </li>
   <li>
     <p><code class="language-plaintext highlighter-rouge">%quickref</code>: Opens a reference for all magic commands - give it a look to see if any of them that I haven’t mentioned here are useful to you!</p>
@@ -61,16 +61,16 @@
 
 <h3 id="nbextensions">nbextensions</h3>
 
-<p>While the previous sections applied to Jupyter notebooks and Jupyterlab, and to a lesser degree IDEs with Jupyter notebook implementations such as PyCharm, nbextensions are extensions to the Jupyter notebook web extensions specifically. To install them, and their easy to use configurator, use</p>
+<p>While the previous sections applied to Jupyter notebooks and Jupyterlab, and to a lesser degree IDEs with Jupyter notebook implementations such as PyCharm, nbextensions are extensions to the Jupyter notebook web interface specifically. To install them, and their easy to use configurator, use</p>
 
 <figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span> <span class="n">jupyter_contrib_nbextensions</span>
 <span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span> <span class="n">jupyter_nbextensions_configurator</span></code></pre></figure>
 
-<p>Note that to use the configurator, you may have to <a href="https://stackoverflow.com/questions/49647705/jupyter-nbextensions-does-not-appear">downgrade your jupyter notebook</a>. Many extensions still work with newer versions and can be installed via the command line however. As with the previous sections, there are many different nbextensions, and you can find the documentation for all of them <a href="https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/">here</a>. The following are my personal recommendations:</p>
+<p>Note that to use the configurator you may have to <a href="https://stackoverflow.com/questions/49647705/jupyter-nbextensions-does-not-appear">downgrade your jupyter notebook</a>. Many extensions still work with newer versions and can be installed via the command line however. As with the previous sections, there are many different nbextensions, and you can find the documentation for all of them <a href="https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/">here</a>. The following are my personal recommendations:</p>
 
 <ul>
   <li>
-    <p><a href="https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/toc2/README.html">Table of contents</a>: adds a moveable table of contents, with section and subsections formed by different markdown heading levels. Also allows you to collapse any (sub)section, hiding code from view. Together these greatly help with notebook organization and navigation</p>
+    <p><a href="https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/toc2/README.html">Table of contents</a>: adds a moveable table of contents, with section and subsections formed by different markdown heading levels. Also allows you to collapse any (sub)section, hiding code from view. Together these greatly help with notebook organization and navigation.</p>
   </li>
   <li>
     <p><a href="https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/nbextensions/skip-traceback/readme.html">Skip traceback</a>: hides error traceback and instead only shows the error type and short summary. Great for when you make an error while using pandas or another module with a large codebase and don’t need to see 100 of code that don’t necessarily help you fix an error.</p>
@@ -96,7 +96,7 @@
 
 <p>Now, to create an interactive widget, all we need to do is use the <code class="language-plaintext highlighter-rouge">@interact</code> decorator followed by a function definition.
 <img src="/assets/img/widget1.png" alt="A basic widget" />
-Essentially, the library creates controls based on the function inputs and outputs the return value of the function automatically. Giving a numerical argument creates a slider with an automatic range, while giving a tuple with the <code class="language-plaintext highlighter-rouge">(start, stop, step)</code> format creates a slider with defined bounds and steps. Giving a string argument creates a text field, while giving a list creates a drop down menu. If the code might take a while to run, you can instead use <code class="language-plaintext highlighter-rouge">@interact_manual</code> instead to only run the code when a button is pressed. These widgets can also be used in conjunction with matplotlib or seaborn to make plots with controllable x and y axes, potentially very useful for EDA.
+Essentially, the library creates controls based on the function inputs and runs the function automatically, outputting any return value. Giving a numerical argument creates a slider with an automatic range, while giving a tuple with the <code class="language-plaintext highlighter-rouge">(start, stop, step)</code> format creates a slider with defined bounds and steps. Giving a string argument creates a text field, while giving a list creates a drop down menu. If the code might take a while to run, you can instead use <code class="language-plaintext highlighter-rouge">@interact_manual</code> instead to only run the code when a button is pressed. These widgets can also be used in conjunction with matplotlib or seaborn to make plots with controllable x and y axes, potentially very useful for EDA.
 <img src="/assets/img/widget2.png" alt="A more advanced widget" />
 The widgets shared here are fairly simple and only meant as a starting point. Check out the <a href="https://ipywidgets.readthedocs.io/en/stable/index.html">documentation</a> to see the full capabilities of the library.</p>
 
