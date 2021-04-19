@@ -1,0 +1,164 @@
+I"�_<p>This is the second in my series of blog posts on analyzing <em>Super Smash Bros. Melee</em> with Python, which I did for my final project at Metis. For the first blog post, on how to use the py-slippi package to import .slp replay files into python, you can go <a href="https://nathaniel-speiser.github.io/How-to-analyze-SSB-Melee-with-Python/">here</a>. You can also find the full project on Github <a href="https://github.com/nathaniel-speiser/melee-predicter">here</a></p>
+
+<h3 id="introduction">Introduction</h3>
+
+<p>While the previous blog post was meant to be more of a  standalone introduction to using Python to analyze Melee games, starting with this post I want to get more into the particulars of my project. My ultimate goal for my project was to train a machine learning model to predict the in-game win probabilities at any time given the state of a Melee game. I’ll go more into my motivations for this more in the next blog post, where I’ll talk about my modeling approach, but for now I want to focus on how I got individual Melee games into a format where they could be used as data for a model. The way I decided to do this for my project was to break up a game into time slices (I eventually decided on every 5 seconds), find in-game information at those time slices, then put all that information, along with general information about the game that did not change with time, into a Pandas dataframe. This post will go over how I did both.</p>
+
+<h3 id="finding-general-time-independent-game-data">Finding general (time-independent) game data</h3>
+
+<p>While I wanted to focus on in-game statistics, such as stocks, damage, number of hits, etc., I also believed going into the project that certain time-independent game properties would affect the odds of which player would ultimately win. The time-independent properties I decided to use were simple: the two characters the players were playing as and the stage they were playing on. I also wanted to include these because I was hoping the model would be able to use these properties to make predictions when it had little other information to go off of, such as at the beginning of the game. I had hoped, for example, that the model would pick up on the fact that Marth has a large advantage versus Fox on the stage Final Destination, and so would give the Marth a high chance of winning at the beginning of the game. The other time-independent property I wanted was the winner of the game, which I used as my objective feature while training my model.</p>
+
+<p>As discussed in my previous post, this kind of information is available in the form of enums in the py-slippi Game object. However, there are some nuances that I wanted to go over here. Before showing any code however, recall the structure of a Game object looks like this:
+<img src="/assets/img/melee/post1/structure.png" alt="The structure of a Game object" /></p>
+
+<h4 id="stage">Stage</h4>
+
+<p>The stage of the game is straightforward to access; simply use <code class="language-plaintext highlighter-rouge">game.start.stage.name</code></p>
+
+<h4 id="characters">Characters</h4>
+
+<p>The difficulty with finding which characters players are playing as is that the ports the players are occupying varies between games. Gamecubes have four possible ports players can plug their controllers in to, so in games with two players (the focus of competitive Melee and my project), there are several different possible port configurations. In py-slippi, the fields relating to player data will always have four entries, on for each port, but any unoccupied ports will just have <code class="language-plaintext highlighter-rouge">None</code> instead of actual information. This port-dependence comes up several times, so I decided to make a function to find the occupied ports.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">get_ports</span><span class="p">(</span><span class="n">game</span><span class="p">):</span>
+    <span class="s">"""
+    Returns tuple of ports occupied by players in Slippi Game
+
+    Args:
+
+    game: PySlippi Game
+
+    """</span>
+    <span class="n">player_tup</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">start</span><span class="p">.</span><span class="n">players</span>
+    <span class="n">ports</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="k">if</span> <span class="n">player_tup</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">ports</span></code></pre></figure>
+
+<p>Now that we have a way to get the ports, we can access the character names for each player:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">get_characters</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">port1</span><span class="p">,</span> <span class="n">port2</span><span class="p">):</span>
+    <span class="s">"""
+    Returns tuple of characters (Fox, Falco, etc.) being played by players in occupied ports
+
+    Args:
+
+    game: PySlippi Game
+    port1 (int): First occupied port
+    port2 (int): Second occupied port
+
+    """</span>
+    <span class="n">player_tup</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">start</span><span class="p">.</span><span class="n">players</span>
+    <span class="n">chars</span> <span class="o">=</span> <span class="p">(</span><span class="n">player_tup</span><span class="p">[</span><span class="n">port1</span><span class="p">].</span><span class="n">character</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="n">player_tup</span><span class="p">[</span><span class="n">port2</span><span class="p">].</span><span class="n">character</span><span class="p">.</span><span class="n">name</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">chars</span></code></pre></figure>
+
+<h4 id="winner">Winner</h4>
+
+<p>The winner of teh game is not actually one of the fields you can simply access. In order to find the winner of a game we have to figure out who had more stocks at the end of the game (i.e. the last frame), with a few exceptions. First, if someone quit out of the game, then the person who did so lost. This is stored in the <code class="language-plaintext highlighter-rouge">lras_initiator</code> field, which gives the port of the player who quit out, or <code class="language-plaintext highlighter-rouge">None</code> otherwise. Next, if the players had the same number of stocks (due to running out of time), then the player with lower damage is the winner. Besides these two cases however, we just need to find the number of stocks each player and compare them. To access the last frame, we just need to look at the last entry in the frames list, i.e. <code class="language-plaintext highlighter-rouge">frames[-1]</code>. The code for finding the winner of a game is:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">get_winner</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">port1</span><span class="p">,</span> <span class="n">port2</span><span class="p">):</span>
+    <span class="s">"""
+    Returns 1 if player with lower port is winner
+    Args:
+    game: PySlippi Game
+    port1 (int): First occupied port
+    port2 (int): Second occupied port
+    """</span>
+    <span class="n">lras</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">end</span><span class="p">.</span><span class="n">lras_initiator</span>
+    <span class="k">if</span> <span class="n">lras</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">lras</span> <span class="o">==</span> <span class="n">port1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="n">p1_stocks</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">frames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">ports</span><span class="p">[</span><span class="n">port1</span><span class="p">].</span><span class="n">leader</span><span class="p">.</span><span class="n">post</span><span class="p">.</span><span class="n">stocks</span>
+    <span class="n">p2_stocks</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">frames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">ports</span><span class="p">[</span><span class="n">port2</span><span class="p">].</span><span class="n">leader</span><span class="p">.</span><span class="n">post</span><span class="p">.</span><span class="n">stocks</span>
+
+    <span class="k">if</span> <span class="n">p1_stocks</span> <span class="o">==</span> <span class="n">p2_stocks</span><span class="p">:</span>
+        <span class="n">p1_damage</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">frames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">ports</span><span class="p">[</span><span class="n">port1</span><span class="p">].</span><span class="n">leader</span><span class="p">.</span><span class="n">post</span><span class="p">.</span><span class="n">damage</span>
+        <span class="n">p2_damage</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">frames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">ports</span><span class="p">[</span><span class="n">port2</span><span class="p">].</span><span class="n">leader</span><span class="p">.</span><span class="n">post</span><span class="p">.</span><span class="n">damage</span>
+        <span class="k">return</span> <span class="n">p1_damage</span> <span class="o">&gt;</span> <span class="n">p2_damage</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">p1_stocks</span> <span class="o">&gt;</span> <span class="n">p2_stocks</span><span class="p">)</span></code></pre></figure>
+
+<p>For this particular project, I decided to return 1 if the player with the lower port won, and 0 if they lost, though of course this could be changed</p>
+
+<h3 id="calculating-in-game-statistics">Calculating in-game statistics</h3>
+
+<p>Now that I’ve showed how to get soem of the more basic information on a game, I’ll talk about getting the information that changes with time. As you might guess, all this information is contained in the  <code class="language-plaintext highlighter-rouge">frames</code> field of the Game object. As a reminder, this is the information that we have for each frame: <img src="/assets/img/melee/post1/frame.png" alt="The structure of a frame" /></p>
+
+<p>Note the <code class="language-plaintext highlighter-rouge">None</code> in <code class="language-plaintext highlighter-rouge">ports</code>: this means the second port isn’t occupied while the first and third are (the third port information is just cut off).</p>
+
+<p>A large amount of information can be calculated from this information. The statistics I ended up focusing on are stocks, damage, number of hits (of different types) landed, number of defensive actions, and information related to when stocks were lost by each player. This is just scratching the surface though - the main Slippi developers have made code to count things like wavedashes or neutral opening, but they do so in Javascript. I’ll go through my logic for calculating each of these, but to see my full code see the file data_utils.py in the utils folder in the project repo.</p>
+
+<h4 id="general-notes">General notes</h4>
+
+<p>Before diving into my logic for calculating statistics, I wanted to go over some things about the frames. First, a frame is a 60th of a second, so if you want to access information every 5 seconds (for example), you would need to check every 300 frames. Second, the most important field for most of these calculations is the <code class="language-plaintext highlighter-rouge">state</code> field. Characters can be in a large number of states, so see the <a href="https://py-slippi.readthedocs.io/en/latest/source/slippi.html#slippi.id.ActionState">documentation</a> for all of them.</p>
+
+<h4 id="stocks-and-damage">Stocks and damage</h4>
+
+<p>Stocks and damage for each character are the simplest things to access since their information is contained in each frame. The code to get stocks and damage for list of times is:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">frame_num</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">times</span><span class="p">):</span>
+    <span class="n">p1_stocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">frames</span><span class="p">[</span><span class="n">frame_num</span><span class="p">].</span><span class="n">ports</span><span class="p">[</span><span class="n">port1</span><span class="p">].</span><span class="n">leader</span><span class="p">.</span><span class="n">post</span><span class="p">.</span><span class="n">stocks</span>
+    <span class="n">p2_stocks</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">frames</span><span class="p">[</span><span class="n">frame_num</span><span class="p">].</span><span class="n">ports</span><span class="p">[</span><span class="n">port2</span><span class="p">].</span><span class="n">leader</span><span class="p">.</span><span class="n">post</span><span class="p">.</span><span class="n">stocks</span>
+    <span class="n">p1_damage</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">frames</span><span class="p">[</span><span class="n">frame_num</span><span class="p">].</span><span class="n">ports</span><span class="p">[</span><span class="n">port1</span><span class="p">].</span><span class="n">leader</span><span class="p">.</span><span class="n">post</span><span class="p">.</span><span class="n">damage</span>
+    <span class="n">p2_damage</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">frames</span><span class="p">[</span><span class="n">frame_num</span><span class="p">].</span><span class="n">ports</span><span class="p">[</span><span class="n">port2</span><span class="p">].</span><span class="n">leader</span><span class="p">.</span><span class="n">post</span><span class="p">.</span><span class="n">damage</span></code></pre></figure>
+
+<h4 id="number-of-hits">Number of hits</h4>
+
+<p>To calculate how many hits of each type (grounded hits, aerials, and smashes), we need to check if a characters damage has increased from the previous frame. If it has, then we look at what state the other player is in, which determines what type of attack they landed</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">p1_prev</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">frames</span><span class="p">[</span><span class="n">frame_num</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">ports</span><span class="p">[</span><span class="n">port1</span><span class="p">].</span><span class="n">leader</span><span class="p">.</span><span class="n">post</span>
+<span class="n">p2_prev</span> <span class="o">=</span> <span class="n">game</span><span class="p">.</span><span class="n">frames</span><span class="p">[</span><span class="n">frame_num</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">ports</span><span class="p">[</span><span class="n">port2</span><span class="p">].</span><span class="n">leader</span><span class="p">.</span><span class="n">post</span>
+<span class="c1">#If a players damage value has changed, update the other players hits
+</span><span class="k">if</span> <span class="n">p2_cur</span><span class="p">.</span><span class="n">damage</span> <span class="o">&gt;</span> <span class="n">p2_prev</span><span class="p">.</span><span class="n">damage</span><span class="p">:</span>
+    <span class="n">p1_hits_landed</span> <span class="o">+=</span><span class="mi">1</span>
+    <span class="k">if</span> <span class="n">p1_state</span>   <span class="ow">in</span> <span class="n">GROUND_ATTACK_STATES</span><span class="p">:</span> <span class="n">p1_ground_attacks</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">p1_state</span> <span class="ow">in</span> <span class="n">SMASH_ATTACK_STATES</span><span class="p">:</span>  <span class="n">p1_smashes</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">p1_state</span> <span class="ow">in</span> <span class="n">AERIAL_ATTACK_STATES</span><span class="p">:</span> <span class="n">p1_aerials</span> <span class="o">+=</span><span class="mi">1</span>
+<span class="k">if</span> <span class="n">p1_cur</span><span class="p">.</span><span class="n">damage</span> <span class="o">&gt;</span> <span class="n">p1_prev</span><span class="p">.</span><span class="n">damage</span><span class="p">:</span>
+    <span class="n">p2_hits_landed</span> <span class="o">+=</span><span class="mi">1</span>
+    <span class="k">if</span> <span class="n">p2_state</span>   <span class="ow">in</span> <span class="n">GROUND_ATTACK_STATES</span><span class="p">:</span> <span class="n">p2_ground_attacks</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">p2_state</span> <span class="ow">in</span> <span class="n">SMASH_ATTACK_STATES</span><span class="p">:</span>  <span class="n">p2_smashes</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">p2_state</span> <span class="ow">in</span> <span class="n">AERIAL_ATTACK_STATES</span><span class="p">:</span> <span class="n">p2_aerials</span> <span class="o">+=</span><span class="mi">1</span></code></pre></figure>
+
+<p>In this code <code class="language-plaintext highlighter-rouge">..._ATTACK_STATES</code> is just a list of numbers containing all the action state numbers that correspond to those type of attacks. I’m also keeping track of the total number of hits.</p>
+
+<h4 id="grabs">Grabs</h4>
+
+<p>Grabs are a bit different than other attacks because grabs themselves don’t do damage. We could check the number of throws, or just check to see when the players enter into certain states that represent a successful grab. I chose to do the latter. The code to check if a player entered a certain state is relatively simple:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">entered_state</span><span class="p">(</span><span class="n">p_cur</span><span class="p">,</span> <span class="n">p_prev</span><span class="p">,</span> <span class="n">state_list</span><span class="p">):</span>
+    <span class="s">"""
+    Returns true if player entered state in state_list in the current frame
+
+    Args:
+
+    p_cur: post object for current frame, ie game. ... .leader.post
+    p_prev: post object for previous frame, ie game. ... .leader.post
+    state_list: List of ints representing action states
+
+    """</span>
+
+    <span class="n">cur_state</span> <span class="o">=</span> <span class="n">p_cur</span><span class="p">.</span><span class="n">state</span><span class="p">.</span><span class="n">value</span>
+    <span class="n">prev_state</span> <span class="o">=</span> <span class="n">p_prev</span><span class="p">.</span><span class="n">state</span><span class="p">.</span><span class="n">value</span>
+
+    <span class="k">return</span> <span class="n">cur_state</span> <span class="ow">in</span> <span class="n">state_list</span> <span class="ow">and</span> <span class="n">prev_state</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">state_list</span></code></pre></figure>
+
+<p>And to calculate the number of successful grabs the code is just</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">if</span> <span class="n">entered_state</span><span class="p">(</span><span class="n">p1_cur</span><span class="p">,</span> <span class="n">p1_prev</span><span class="p">,</span> <span class="n">GRAB_STATES</span><span class="p">):</span> <span class="n">p1_grabs</span><span class="o">+=</span><span class="mi">1</span>
+<span class="k">if</span> <span class="n">entered_state</span><span class="p">(</span><span class="n">p2_cur</span><span class="p">,</span> <span class="n">p2_prev</span><span class="p">,</span> <span class="n">GRAB_STATES</span><span class="p">):</span> <span class="n">p2_grabs</span><span class="o">+=</span><span class="mi">1</span></code></pre></figure>
+
+<p>#Defensive actions</p>
+
+<p>I also wanted to include defensive actions, such as the number of frames sheilding up until that point in time and the number of rolls. These just check the current state and if the correct state was entered, respectively:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c1">#Shielding states
+</span><span class="k">if</span> <span class="n">p1_state</span> <span class="ow">in</span> <span class="n">SHIELD_STATES</span><span class="p">:</span> <span class="n">p1_frames_shielding</span><span class="o">+=</span><span class="mi">1</span>
+<span class="k">if</span> <span class="n">p2_state</span> <span class="ow">in</span> <span class="n">SHIELD_STATES</span><span class="p">:</span> <span class="n">p2_frames_shielding</span><span class="o">+=</span><span class="mi">1</span>
+<span class="c1">#Roll states
+</span><span class="k">if</span> <span class="n">entered_state</span><span class="p">(</span><span class="n">p1_cur</span><span class="p">,</span> <span class="n">p1_prev</span><span class="p">,</span> <span class="n">ROLL_STATES</span><span class="p">):</span> <span class="n">p1_rolls</span><span class="o">+=</span><span class="mi">1</span>
+<span class="k">if</span> <span class="n">entered_state</span><span class="p">(</span><span class="n">p2_cur</span><span class="p">,</span> <span class="n">p2_prev</span><span class="p">,</span> <span class="n">ROLL_STATES</span><span class="p">):</span> <span class="n">p2_rolls</span><span class="o">+=</span><span class="mi">1</span></code></pre></figure>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>I hope that this is useful for anyone who wants to get started analyzing Melee games with Python. In the my next few blog posts I’ll go more in depth with what I did for my final project for Metis, where I calculated in game win probabilities. If you’d like to jump ahead and see what I did, you can find that project <a href="https://github.com/nathaniel-speiser/melee-predicter">here</a>.</p>
+:ET
